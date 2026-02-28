@@ -8,17 +8,16 @@ This is a script made in bash for a basic system information.
 * Make it executable `chmod +x system_info.sh` -> also you can change it's name `mv system_info.sh system_info`.
 * Run it `system_info`
 
-## Command used ?
-* `uname` command
-* `uptime` command
-* `environment variables`
-* `df -h /` -> for disk
-* `/etc/cpuinfo` -> cpu info
-* `free -h` -> memory info
-* `ip a` -> ip address
+## Added lately
+
+### 28/2/2026:
+* Fixing CPU information, total number of cores, threads, Temperature,...
+* Fixing Memory informations.
+* Try to make the script works globally as possible on different distros.
 
 
-* The output of the script will be like:
+
+### Sample output of the script will be like:
 
 ```bash
 > $ ./system_info.sh                                                                [±main ✓]
