@@ -85,5 +85,6 @@ echo -e "${RED}Number of GPU's:${RESET} ${i}"
 #Networking
 echo -e "\n==Networking=="
 echo -e "${RED}Hostname:${RESET} $(cat /etc/hostname)"
-echo -e "${RED}IP address (wifi):${RESET} $(ip a | grep wlan0 | grep inet | awk '{print $2}')"
-echo -e "${RED}IP address (ethernet):${RESET} $(ip a | grep enp | grep inet | awk '{print $2}')"
+echo -e "${RED}Private IP address (wifi):${RESET} $(ip a | grep wlan0 | grep inet | awk '{print $2}')"
+echo -e "${RED}Private IP address (ethernet):${RESET} $(ip a | grep enp | grep inet | awk '{print $2}')"
+echo -e "${RED}Public IP address:${RESET} $(curl ifconfig.me 2>/dev/null)"
