@@ -23,8 +23,11 @@ echo -e "${RED}System language:${RESET} ${LANG}"
 echo -e "${RED}Terminal:${RESET} ${TERM}"
 echo -e "${RED}Window manager:${RESET} ${XDG_CURRENT_DESKTOP}"
 echo -e "${RED}Session:${RESET} ${XDG_SESSION_TYPE}"
+echo -e "${RED}Number of current users using the system:${RESET} $(who | awk '{print $1}' | sort | uniq | wc -l)"
 upTime=$(uptime -p)
-echo -e "${RED}Machine running time:${RESET} ${upTime#* }"
+dateTime=$(uptime -s)
+echo -e "${RED}Machine running time since last reboot:${RESET} ${upTime#* }"
+echo -e "${RED}Machine date / time since last reboot:${RESET} $(uptime -s | awk '{printf("%s / %s",$1,$2)}')"
 
 # Kernel version + archi
 echo -e "\n==Kernel info=="
@@ -43,11 +46,13 @@ echo -e "${RED}Remaining disk space:${RESET} $(df -h ${USER_ACC} | awk 'NR==2 {p
 echo -e "\n==Memory=="
 echo -e "${RED}Currently used memory:${RESET} $(free -h | awk 'NR==2 {print $3}')"
 echo -e "${RED}Currently available memory:${RESET} $(free -h | awk 'NR==2 {print $7}')"
+echo -e "${RED}Memory utilization rate:${RESET} $(free | awk 'NR==2 {printf("%.2f%%\n",$3/$2 * 100)}')"
 echo -e "${RED}Swap used:${RESET} $(free -h | awk 'NR==3 {print $3}')"
 echo -e "${RED}Swap free:${RESET} $(free -h | awk 'NR==3 {print $4}')"
 
 #CPU info --> /proc/cpuinfo
 echo -e "\n==CPU=="
+echo -e "${RED}Current utilization of CPU:${RESET} $(top -bn1 | grep "Cpu(s)" | awk '/id/ {printf("%.2f%", 100-$8)}')"
 cpuModel=$(cat /proc/cpuinfo | grep 'model name' /proc/cpuinfo | head -1 | cut -d: -f2)
 echo -e "${RED}Model Name:${RESET} ${cpuModel#* }"
 echo -e "${RED}CPU Archi type:${RESET} $(uname -m)"
@@ -88,3 +93,13 @@ echo -e "${RED}Hostname:${RESET} $(cat /etc/hostname)"
 echo -e "${RED}Private IP address (wifi):${RESET} $(ip a | grep wlan0 | grep inet | awk '{print $2}')"
 echo -e "${RED}Private IP address (ethernet):${RESET} $(ip a | grep enp | grep inet | awk '{print $2}')"
 echo -e "${RED}Public IP address:${RESET} $(curl ifconfig.me 2>/dev/null)"
+
+echo -e "\n==LVM=="
+#LVM
+# Lvs --> logical volumes
+echo -e "$(lvs >/dev/null 2>&1 && echo -e "${RED}LVM is active${RESET}" || echo -e "${RED}LVM is not active${RESET}")"
+
+# Number of connections with servers or services or applications
+echo -e "\n==Number of connections=="
+
+echo -e "${RED}Number of active connections with other services/ devices/ applications:${RESET} $(ss -tun | grep -i ESTAB | wc -l)"
