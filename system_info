@@ -4,6 +4,7 @@ GREEN="\e[32m"
 RED="\e[31m"
 BLUE="\e[34m"
 RESET="\e[0m"
+BOLD="\e[1m"
 
 #General info
 echo -e "==General info=="
@@ -28,6 +29,7 @@ upTime=$(uptime -p)
 dateTime=$(uptime -s)
 echo -e "${RED}Machine running time since last reboot:${RESET} ${upTime#* }"
 echo -e "${RED}Machine date / time since last reboot:${RESET} $(uptime -s | awk '{printf("%s / %s",$1,$2)}')"
+echo -e "$(lvs >/dev/null 2>&1 && echo -e "${RED}LVM is active${RESET}" || echo -e "${RED}LVM is not active${RESET}")"
 
 # Kernel version + archi
 echo -e "\n==Kernel info=="
@@ -35,8 +37,12 @@ echo -e "${RED}Kernel version:${RESET} $(uname -s), $(uname -r)"
 
 #Disk
 echo -e "\n==Disk=="
-USER_ACC=/home/$(whoami)
-echo -e "${RED}Root filesystem:${RESET} $(df -h / | awk 'NR==2 {print $1}')"
+USER_ACC=""
+if [[ $(whoami) == "root" ]]; then
+  USER_ACC=/
+else
+  USER_ACC="/home/$(whoami)"
+fi
 echo -e "${RED}Current user filesystem:${RESET} $(df -h ${USER_ACC} | awk 'NR==2 {print $1}')"
 echo -e "${RED}Total disk space:${RESET} $(df -h ${USER_ACC} | awk 'NR==2 {print $2}')"
 echo -e "${RED}Total used space:${RESET} $(df -h ${USER_ACC} | awk 'NR==2 {print $3", Total: "$5}')"
@@ -89,17 +95,29 @@ echo -e "${RED}Number of GPU's:${RESET} ${i}"
 
 #Networking
 echo -e "\n==Networking=="
-echo -e "${RED}Hostname:${RESET} $(cat /etc/hostname)"
-echo -e "${RED}Private IP address (wifi):${RESET} $(ip a | grep wlan0 | grep inet | awk '{print $2}')"
-echo -e "${RED}Private IP address (ethernet):${RESET} $(ip a | grep enp | grep inet | awk '{print $2}')"
-echo -e "${RED}Public IP address:${RESET} $(curl ifconfig.me 2>/dev/null)"
 
-echo -e "\n==LVM=="
-#LVM
-# Lvs --> logical volumes
-echo -e "$(lvs >/dev/null 2>&1 && echo -e "${RED}LVM is active${RESET}" || echo -e "${RED}LVM is not active${RESET}")"
+## ip route --> showing route table: specific rules your system used to decide where to send packets
+## This command will give us the exact network interface used by the system (wifi or ethernet)
+interface=$(ip route get 1.1.1.1 | awk '{print $5}')
+if [[ $interface == wl* ]]; then
+  echo -e "${BOLD}This device connected by ${RED}WIFI${RESET}"
+  echo -e "${RED}Hostname:${RESET} $(cat /etc/hostname)"
+  echo -e "${RED}Public IP address:${RESET} $(curl ifconfig.me 2>/dev/null)"
+
+  echo -e "${RED}Private IP address (wifi):${RESET} $(ip route get 1.1.1.1 | awk '{print $7}')"
+  echo -e "${RED}MAC address (wifi):${RESET} $(ip link show "$interface" | grep -i link | awk '{print $2}')"
+elif [[ $interface == en* ]]; then
+  echo -e "${BOLD}This device connected by ${RED}Ethernet${RESET}"
+  echo -e "${RED}Hostname:${RESET} $(cat /etc/hostname)"
+  echo -e "${RED}Public IP address:${RESET} $(curl ifconfig.me 2>/dev/null)"
+
+  echo -e "${RED}Private IP address (ethernet):${RESET} $(ip route get 1.1.1.1 | awk '{print $7}')"
+  echo -e "${RED}MAC address (ethernet):${RESET} $(ip link show "$interface" | grep -i link | awk '{print $2}')"
+else
+  echo -e "${RED}Unkown network interface!!"
+fi
 
 # Number of connections with servers or services or applications
 echo -e "\n==Number of connections=="
 
-echo -e "${RED}Number of active connections with other services/ devices/ applications:${RESET} $(ss -tun | grep -i ESTAB | wc -l)"
+echo -e "${RED}Number of active connections with other services/ devices/ applications:${RESET} $(ss -tun | grep -i estab | wc -l)"
