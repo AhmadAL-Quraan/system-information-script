@@ -15,6 +15,12 @@ This is a script made in bash for a basic system information.
 * Fixing Memory informations.
 * Try to make the script works globally as possible on different distros.
 
+### 20/3/2026
+* Fixing the IP address information and network interface.
+* Adding MAC address for the network interface used (ethernet or WIFI)
+* Adding number of programs/ applications/ .. connected with the device .
+* Adding number of commands executed by sudo using `journalctl _COMM=sudo`, which giving exactly the log files for this specific process/ command .
+
 
 
 ### Sample output of the script will be like:
