@@ -6,7 +6,7 @@ This is a script made in bash for a basic system information.
 
 * clone the file and put it in a global path, see `echo $PATH`, usually in local `~/.local/bin/`.
 * Make it executable `chmod +x system_info.sh` -> also you can change it's name `mv system_info.sh system_info`.
-* Run it `system_info`
+* Run it `system_info` or `system_info | less -R` -> if you want to move up or down, it's long so recommended.
 
 ## Added lately
 
