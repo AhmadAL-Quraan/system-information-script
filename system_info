@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Comment this if you want to see errors from accessing specific files to have data about the system, or if your system missing some commands.
+# Comment this if you want to see errors from accessing specific files for system info, or if your system missing some commands.
 exec 2>/dev/null
 
 
