@@ -1,6 +1,11 @@
 #!/bin/bash
 
+# Comment this if you want to see errors from accessing specific files to have data about the system, or if your system missing some commands.
 exec 2>/dev/null
+
+
+# Colors for terminal
+
 RED="\e[31m"
 BLUE="\e[34m"
 RESET="\e[0m"
@@ -8,11 +13,12 @@ BOLD="\e[1m"
 
 #General info
 echo -e "==General info=="
-
 echo -e "${RED}Current user:${RESET} $(whoami)"
 chasis=$(hostnamectl | sed -n 's/^[[:space:]]*Chassis:[[:space:]]*//p')
-#Move until true in sed (regex)
+
+# Move until false in sed (regex)
 os_name=$(cat /etc/os-release | grep -i pretty | sed 's/[^"]*//; s/"//g')
+
 echo -e "${RED}Distro name:${RESET} ${os_name}"
 shell=${SHELL}
 echo -e "${RED}Shell:${RESET} ${shell##*/}"
@@ -25,10 +31,12 @@ echo -e "${RED}Terminal:${RESET} ${TERM}"
 echo -e "${RED}Window manager:${RESET} ${XDG_CURRENT_DESKTOP}"
 echo -e "${RED}Session:${RESET} ${XDG_SESSION_TYPE}"
 echo -e "${RED}Number of current users using the system:${RESET} $(who | awk '{print $1}' | sort | uniq | wc -l)"
+
 upTime=$(uptime -p)
 dateTime=$(uptime -s)
 echo -e "${RED}Machine running time since last reboot:${RESET} ${upTime#* }"
 echo -e "${RED}Machine date / time since last reboot:${RESET} $(uptime -s | awk '{printf("%s / %s",$1,$2)}')"
+
 echo -e "$(lvs >/dev/null 2>&1 && echo -e "${RED}LVM is active${RESET}" || echo -e "${RED}LVM is not active${RESET}")"
 
 # Kernel version + archi
