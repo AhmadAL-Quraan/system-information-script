@@ -119,6 +119,6 @@ Private IP: xxx.xxx.xxx.xxx
 * Should work on most distros with minimal changes.
 
 # Tips
-* Run with less -R for scrollable colored output
-* Use sudo for potentially more complete hardware info
-* Uncomment debug suppression if something looks wrong
+* Run with `less -R` for scrollable colored output.
+* Use `sudo` for potentially more complete hardware info.
+* Uncomment debug suppression if something looks wrong.
