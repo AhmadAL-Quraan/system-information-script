@@ -118,7 +118,7 @@ Private IP: xxx.xxx.xxx.xxx
 * Tested on Debian-based distributions and RedHat based (Fedora, Rocky, ...)
 * Should work on most distros with minimal changes.
 
-💡# Tips
+# Tips
 * Run with less -R for scrollable colored output
 * Use sudo for potentially more complete hardware info
 * Uncomment debug suppression if something looks wrong
